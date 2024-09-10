@@ -12,13 +12,13 @@ import { map } from 'rxjs/operators';
   template: `
     <section>
       <form>
-        <input type="text" placeholder="Filter by street" />
-        <button class="primary" type="button">Search</button>
+        <input type="text" placeholder="Filter by street" #filter/>
+        <button class="primary" type="button" (click)="filterResults(filter.value)">Search</button>
       </form>
     </section>
     <section class="results">
-      <app-truck-location
-        *ngFor="let TruckLocation of TruckLocationList"
+      <app-truck-location 
+        *ngFor="let TruckLocation of filteredLocationList" 
         [TruckLocation]="TruckLocation"
       ></app-truck-location>
     </section>
@@ -27,39 +27,37 @@ import { map } from 'rxjs/operators';
 })
 
 export class TruckComponent {
-  TruckLocationList: TruckLocation[] = [];
-  constructor() { }
+  truckLocationList: TruckLocation[] = [];
+  constructor() {
+  }
   readonly baseUrl = 'https://angular.dev/assets/images/tutorials/common';
 
   data: any = truckData;
+  filteredLocationList: TruckLocation[] = [];
 
   ngOnInit() {
     console.log('Data', this.data);
-    this.TruckLocationList = this.data.default.map((b: any) => this.iTruckFromJSON(b));
+    this.truckLocationList = this.data.default.map((b: any) => this.iTruckFromJSON(b));
+    this.filteredLocationList = this.truckLocationList;
   }
 
+  filterResults(text: string) {
+    if (!text) {
+      this.filteredLocationList = this.truckLocationList;
+      return;
+    }
+    this.filteredLocationList = this.truckLocationList.filter((truckLocation) =>
+      truckLocation?.Address.toLowerCase().includes(text.toLowerCase()),
+    );
+  }
 
- iTruckFromJSON(json: any): TruckLocation {
-  return {
+  iTruckFromJSON(json: any): TruckLocation {
+    return {
       locationid: json.locationid,
       Applicant: json.Applicant,
       Address: json.Address,
       FoodItems: json.FoodItems,
       FacilityType: json.FacilityType
-  };
+    };
+  }
 }
-
-  /*TruckLocationList: TruckLocation[] = [
-    {
-      id: 0,
-      name: 'Acme Fresh Start Truck',
-      city: 'Chicago',
-      state: 'IL',
-      photo: `${this.baseUrl}/bernard-hermant-CLKGGwIBTaY-unsplash.jpg`,
-      availableUnits: 4,
-      wifi: true,
-      laundry: true,
-    },
-  ];*/
-}
-
