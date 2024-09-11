@@ -13,6 +13,10 @@ Run the webserver:
 ##
     ng serve
 
+After running the webserver, Angular will give you a local address to put in your browser to see the site. On my machine it's:
+##
+    http://localhost:4200/
+
 Production Deployment you would run ng build and deploy the dist/trucks folder to a real web server:
 ##
     ng build
