@@ -1,6 +1,10 @@
 Getting Started:
 Install node (latest or newer version)
 
+Clone this repo:
+##
+    git clone git@github.com:lokapujya/trucks.git
+
 Install the project:
 ##
     npm install
